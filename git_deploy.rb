@@ -50,6 +50,10 @@ namespace :deploy do
     end
   end
   
+  task :symlink, :except => { :no_release => true } do
+    # This empty task is needed to override the default :symlink task
+  end
+  
   task :migrate, :roles => :db, :only => { :primary => true } do
     rake = fetch(:rake, "rake")
     rails_env = fetch(:rails_env, "production")
