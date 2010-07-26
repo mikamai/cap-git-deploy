@@ -4,6 +4,7 @@ namespace :deploy do
   desc "Deploy the MFer"
   task :default do
     update
+    revision_file
     restart
   end
   
@@ -61,6 +62,18 @@ namespace :deploy do
     migrate_env = fetch(:migrate_env, "")
     
     run "cd #{current_path}; #{rake} RAILS_ENV=#{rails_env} #{migrate_env} db:migrate"
+  end
+  
+  desc "Create a REVISION file containing the SHA of the deployed commit"
+  task :revision_file, :except => { :no_release => true } do
+    sha = ""
+    run "cd #{current_path}; git rev-parse #{branch}" do |channel, stream, data|
+      sha = data.strip
+    end
+    
+    unless sha.empty?
+      run "cd #{current_path}; echo #{sha} > REVISION"
+    end
   end
   
 end
