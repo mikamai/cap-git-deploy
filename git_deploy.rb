@@ -26,7 +26,8 @@ namespace :deploy do
  
   desc "Update the deployed code."
   task :update_code, :except => { :no_release => true } do
-    run "cd #{current_path}; git pull origin #{branch}; git reset --hard #{branch}"
+    run "cd #{current_path}; git pull origin #{branch};" unless rolling_back
+    run "cd #{current_path}; git reset --hard #{branch}"
     
     timestamp = Time.now.strftime("%Y%m%d%H%M%S")
     run "cd #{current_path}; git tag deploy_#{timestamp}" unless rolling_back
@@ -37,7 +38,7 @@ namespace :deploy do
     task :default, :except => { :no_release => true } do
       latest_tag = ""
       run "cd #{current_path}; git describe --tags --match deploy_* --abbrev=0 HEAD^" do |channel, stream, data|
-        latest_tag << data
+        latest_tag << data.strip
       end
       
       if latest_tag.empty?
