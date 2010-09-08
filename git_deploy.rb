@@ -34,6 +34,29 @@ namespace :deploy do
     run "cd #{current_path}; git tag deploy_#{timestamp}" unless rolling_back
   end
   
+  desc "Return information on the latest deployment operation"
+  task :latest do
+    latest_tag = ""
+    current_tag = ""
+    run "cd #{current_path}; git describe --tags --match deploy_* --abbrev=0 HEAD^" do |channel, stream, data|
+      latest_tag << data.strip
+    end
+    run "cd #{current_path}; git describe --tags --match deploy_* --abbrev=0 HEAD" do |channel, stream, data|
+      current_tag << data.strip
+    end
+    
+    diffs = ""
+    run "cd #{current_path}; git diff --name-only #{latest_tag} #{current_tag}" do |channel, stream, data|
+      diffs << data
+    end
+    STDOUT.puts "===="
+    STDOUT.puts "Showing modified files between"
+    STDOUT.puts "#{latest_tag} and #{current_tag}"
+    STDOUT.puts
+    STDOUT.puts diffs.strip
+    STDOUT.puts "===="
+  end
+  
   namespace :rollback do
     desc "Rollback to previous release"
     task :default, :except => { :no_release => true } do
