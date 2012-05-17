@@ -110,4 +110,5 @@ task :get_revision do
   end
 end
 
+after "deploy:restart", "deploy:migrate"
 after "deploy:update_code", "deploy:bundle"
