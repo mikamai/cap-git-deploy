@@ -23,7 +23,9 @@ module Cap
   end
 end
 
-Capistrano::Configuration.instance.load_paths << File.join(File.dirname(__FILE__), "recipes")
-Dir.glob(File.join(File.dirname(__FILE__), '/recipes/*.rb')).sort.each do |f|
-  Capistrano::Configuration.instance.load f
+if Capistrano::Configuration.instance
+  Capistrano::Configuration.instance.load_paths << File.join(File.dirname(__FILE__), "recipes")
+  Dir.glob(File.join(File.dirname(__FILE__), '/recipes/*.rb')).sort.each do |f|
+    Capistrano::Configuration.instance.load f
+  end
 end
