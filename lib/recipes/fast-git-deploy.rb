@@ -32,7 +32,7 @@ namespace :deploy do
     branch_name = rolling_back && branch || "origin/#{branch}"
 
     run "cd #{current_path} && git fetch" unless rolling_back
-    run "cd #{current_path} && git reset --hard origin/#{branch_name}"
+    run "cd #{current_path} && git reset --hard #{branch_name}"
   end
 
   namespace :rollback do
