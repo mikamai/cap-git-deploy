@@ -82,6 +82,7 @@ namespace :deploy do
     commands << "echo '#{sha}' > REVISION"
     commands << "echo '#{branch}' >> REVISION"
     commands << "echo '#{logged_user}' >> REVISION"
+    commands << "echo '#{Time.now}' >> REVISION"
     run commands.join ' && '
   end
 
