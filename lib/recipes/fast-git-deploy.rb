@@ -67,7 +67,7 @@ namespace :deploy do
     rails_env = fetch :rails_env, "production"
     migrate_env = fetch :migrate_env, ""
 
-    run "cd #{current_path}; #{bundler} #{rake} RAILS_ENV=#{rails_env} #{migrate_env} db:migrate"
+    run "cd #{current_path}; #{bundler} exec #{rake} RAILS_ENV=#{rails_env} #{migrate_env} db:migrate"
   end
 
   desc "Create a REVISION file containing the SHA of the deployed commit"
