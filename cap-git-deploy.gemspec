@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Cap::Git::Deploy::VERSION
   s.authors     = ["MIKAMAI"]
   s.email       = ["projects@mikamai.com"]
-  s.homepage    = ""
+  s.homepage    = "http://www.mikamai.com"
   s.summary     = %q{Mikamai-style deploy strategy}
   s.description = %q{Mikamai-style deploy strategy}
 
