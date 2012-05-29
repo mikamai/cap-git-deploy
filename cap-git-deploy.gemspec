@@ -5,8 +5,8 @@ require "cap-git-deploy/version"
 Gem::Specification.new do |s|
   s.name        = "cap-git-deploy"
   s.version     = Cap::Git::Deploy::VERSION
-  s.authors     = ["Nicola Racco"]
-  s.email       = ["nicola@mikamai.com"]
+  s.authors     = ["MIKAMAI"]
+  s.email       = ["projects@mikamai.com"]
   s.homepage    = ""
   s.summary     = %q{Mikamai-style deploy strategy}
   s.description = %q{Mikamai-style deploy strategy}
