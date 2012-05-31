@@ -54,25 +54,8 @@ namespace :deploy do
     end
   end
 
-  task :create_symlink, :except => { :no_release => true } do
-    # This empty task is needed to override the default :create_symlink task
-  end
-
-  task :symlink, :except => { :no_release => true } do
-    # This empty task is needed to override the default :symlink task
-  end
-
-  task :migrate, :roles => :db, :only => { :primary => true } do
-    rake = fetch :rake, "rake"
-    bundler = fetch :bundler, "bundler"
-    rails_env = fetch :rails_env, "production"
-    migrate_env = fetch :migrate_env, ""
-
-    run "cd #{current_path}; RAILS_ENV=#{rails_env} #{bundler} exec #{rake} db:migrate #{migrate_env}"
-  end
-
   desc "Create a REVISION file containing the SHA of the deployed commit"
-  task :update_revision, :except => { :no_release => true } do
+  task :create_symlink, :except => { :no_release => true } do
     # If for some reason we cannot find the commit sha, then we'll use the branch name
     sha = "origin/#{branch}"
     run "cd #{current_path}; git rev-parse origin/#{branch}" do |channel, stream, data|
@@ -86,6 +69,19 @@ namespace :deploy do
     commands << "echo '#{logged_user}' >> REVISION"
     commands << "echo '#{Time.now}' >> REVISION"
     run commands.join ' && '
+  end
+
+  task :symlink, :except => { :no_release => true } do
+    create_symlink
+  end
+
+  task :migrate, :roles => :db, :only => { :primary => true } do
+    rake = fetch :rake, "rake"
+    bundler = fetch :bundler, "bundler"
+    rails_env = fetch :rails_env, "production"
+    migrate_env = fetch :migrate_env, ""
+
+    run "cd #{current_path}; RAILS_ENV=#{rails_env} #{bundler} exec #{rake} db:migrate #{migrate_env}"
   end
 
   task :start do ; end
@@ -105,3 +101,5 @@ task :get_revision do
     end
   end
 end
+
+after 'deploy:update_code', 'deploy:migrate'
