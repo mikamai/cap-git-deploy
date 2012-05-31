@@ -88,8 +88,6 @@ task :get_revision do
   end
 end
 
-before 'deploy:restart', 'deploy:migrate'
-
 # launch bundle:install after update task if it's detected
 # because it will not run with his standard behavior (before deploy:finalize_update)
 # as we are using this custom git-style deployment procedure
