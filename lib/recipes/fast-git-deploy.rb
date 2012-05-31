@@ -97,4 +97,4 @@ task :get_revision do
   end
 end
 
-after 'deploy:update', 'deploy:migrate'
+before 'deploy:restart', 'deploy:migrate'
