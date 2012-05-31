@@ -1,7 +1,9 @@
 set :rolling_back, false
 set :scm, :git
 set :logged_user, Cap::Git::Deploy.current_user
-set :branch, ENV['branch'] || Cap::Git::Deploy.current_branch unless exists? :branch
+unless exists? :branch
+  set :branch, ENV['branch'] || Cap::Git::Deploy.current_branch
+end
 set(:latest_release) { fetch :current_path }
 set(:current_release) { fetch :current_path }
 
@@ -18,17 +20,11 @@ namespace :deploy do
     # This is where the log files will go
     run "mkdir -p #{current_path}/log" rescue 'no problem if log already exist'
 
-    # This is to make sure we are on the correct branch
-    run "cd #{current_path}; git checkout -b #{branch} --track origin/#{branch}" if branch != 'master'
-  end
-
-  desc "Update the deployed code"
-  task :update_code, :except => { :no_release => true } do
-    # If we are rolling back branch is a commit
-    branch_name = rolling_back && branch || "origin/#{branch}"
-
-    run "cd #{current_path} && git fetch" unless rolling_back
-    run "cd #{current_path} && git reset --hard #{branch_name}"
+    branch = fetch :branch, 'master'
+    if branch != 'master'
+      # This is to make sure we are on the correct branch
+      run "cd #{current_path} && git checkout -b #{branch} --track origin/#{branch}"
+    end
   end
 
   namespace :rollback do
@@ -49,42 +45,29 @@ namespace :deploy do
     end
   end
 
-  desc "Create a REVISION file containing the SHA of the deployed commit"
-  task :create_symlink, :except => { :no_release => true } do
-    # If for some reason we cannot find the commit sha, then we'll use the branch name
-    sha = "origin/#{branch}"
-    run "cd #{current_path}; git rev-parse origin/#{branch}" do |channel, stream, data|
-      sha = data.strip
+  task :update, :except => { :no_release => true } do
+    transaction do
+      update_code
+      insert_tag
+    end
+  end
+
+  desc "Update the deployed code"
+  task :update_code, :except => { :no_release => true } do
+    # If we are rolling back branch, then this is a commit
+    if rolling_back
+      branch_name = branch
+    else
+      branch_name = "origin/#{fetch :branch, 'master'}"
     end
 
-    commands = []
-    commands << "cd #{current_path}"
-    commands << "echo '#{sha}' > REVISION"
-    commands << "echo '#{branch}' >> REVISION"
-    commands << "echo '#{logged_user}' >> REVISION"
-    commands << "echo '#{Time.now}' >> REVISION"
-    run commands.join ' && '
+    run "cd #{current_path} && git fetch" unless rolling_back
+    run "cd #{current_path} && git reset --hard #{branch_name}"
   end
 
-  task :symlink, :except => { :no_release => true } do
-    create_symlink
-  end
-
-  task :start do ; end
-  task :stop do ; end
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    # Restart in Passenger way
-    run "touch #{File.join(current_path,'tmp','restart.txt')}"
-  end
-end
-
-desc "Get info about last deploy"
-task :get_revision do
-  keys = %w(SHA Branch Author Date).reverse
-  run "cat #{current_path}/REVISION" do |c, s, data|
-    data.strip.lines.each do |line|
-      puts "#{keys.pop}: #{line.strip}" if keys.any?
-    end
+  task :insert_tag, :except => { :no_release => true } do
+    timestamp = Time.now.strftime '%Y%m%d%H%M%S'
+    run "cd #{current_path}; git tag deploy_#{timestamp}" unless rolling_back
   end
 end
 
