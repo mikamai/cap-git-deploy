@@ -1,3 +1,5 @@
+set :revision_file, 'REVISION'
+
 namespace :revision do
   desc "Create a REVISION file containing the SHA of the deployed commit"
   task :set, :except => { :no_release => true } do
@@ -9,17 +11,17 @@ namespace :revision do
 
     commands = []
     commands << "cd #{current_path}"
-    commands << "echo '#{sha}' > REVISION"
-    commands << "echo '#{branch}' >> REVISION"
-    commands << "echo '#{logged_user}' >> REVISION"
-    commands << "echo '#{Time.now}' >> REVISION"
+    commands << "echo '#{sha}' > #{revision_file}"
+    commands << "echo '#{branch}' >> #{revision_file}"
+    commands << "echo '#{logged_user}' >> #{revision_file}"
+    commands << "echo '#{Time.now}' >> #{revision_file}"
     run commands.join ' && '
   end
 
   desc "Get info about last deploy"
   task :get do
     keys = %w(SHA Branch Author Date).reverse
-    run "cat #{current_path}/REVISION" do |c, s, data|
+    run "cat #{current_path}/#{revision_file}" do |c, s, data|
       data.strip.lines.each do |line|
         puts "#{keys.pop}: #{line.strip}" if keys.any?
       end
