@@ -72,11 +72,11 @@ namespace :deploy do
 
   task :migrate, :roles => :db, :only => { :primary => true } do
     rake = fetch :rake, "rake"
-    bundler = fetch :bundler, "bundler"
+    bundle = fetch :bundle_cmd, 'bundle'
     rails_env = fetch :rails_env, "production"
     migrate_env = fetch :migrate_env, ""
 
-    run "cd #{current_path}; RAILS_ENV=#{rails_env} #{bundler} exec #{rake} db:migrate #{migrate_env}"
+    run "cd #{current_path}; RAILS_ENV=#{rails_env} #{bundle} exec #{rake} db:migrate #{migrate_env}"
   end
 
   task :start do ; end
