@@ -19,7 +19,7 @@ cap-git-deploy disables the use of the symlinks for version control in favor of 
 The following is a sample recipe that uses git-deploy as deployment procedure:
 
 ```ruby
-    require 'cap-git-deploy/git-deploy'
+    require 'cap-git-deploy'
 
     set :repository, 'git@my-host.com:my-app.git'
     set :deploy_to, '/var/apps/my-app'
