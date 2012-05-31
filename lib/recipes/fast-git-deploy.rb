@@ -2,6 +2,7 @@ set :rolling_back, false
 set :scm, :git
 set :logged_user, Cap::Git::Deploy.current_user
 set :branch, ENV['branch'] || Cap::Git::Deploy.current_branch unless exists? :branch
+set(:latest_release) { fetch :current_path }
 
 namespace :deploy do
   desc "Setup a GitHub-style deployment"
