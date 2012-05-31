@@ -9,6 +9,7 @@ module Cap
     module Deploy
       # utility functions
 
+      # The name of the branch we are deploying
       def self.current_branch
         repo = Grit::Repo.new '.'
         branch = repo.head
@@ -16,6 +17,7 @@ module Cap
         branch && branch.name || 'master'
       end
 
+      # The name of the current logged user
       def self.current_user
         "#{Etc.getlogin}@#{Socket.gethostname}"
       end

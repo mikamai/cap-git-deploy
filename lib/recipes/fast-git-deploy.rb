@@ -8,6 +8,7 @@ namespace :deploy do
     update
     update_revision
     restart
+    migrate
   end
 
   desc "Setup a GitHub-style deployment"
@@ -57,7 +58,7 @@ namespace :deploy do
     # This empty task is needed to override the default :create_symlink task
   end
 
-  task :create_symlink, :except => { :no_release => true } do
+  task :symlink, :except => { :no_release => true } do
     # This empty task is needed to override the default :symlink task
   end
 
@@ -93,12 +94,6 @@ namespace :deploy do
     # Restart in Passenger way
     run "touch #{File.join(current_path,'tmp','restart.txt')}"
   end
-
-  desc "Runs bundle for production environments"
-  task :bundle do
-    bundler = fetch :bundler, "bundler"
-    run "cd #{current_path}; #{bundler} install --deployment --without mac development test"
-  end
 end
 
 desc "Get info about last deploy"
@@ -110,6 +105,3 @@ task :get_revision do
     end
   end
 end
-
-after "deploy:restart", "deploy:migrate"
-after "deploy:update_code", "deploy:bundle"
