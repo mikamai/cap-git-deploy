@@ -4,13 +4,6 @@ set :logged_user, Cap::Git::Deploy.current_user
 set :branch, ENV['branch'] || Cap::Git::Deploy.current_branch unless exists? :branch
 
 namespace :deploy do
-  task :default do
-    update
-    update_revision
-    restart
-    migrate
-  end
-
   desc "Setup a GitHub-style deployment"
   task :setup, :except => { :no_release => true } do
     dirs = [deploy_to, shared_path]
