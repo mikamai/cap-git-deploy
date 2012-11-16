@@ -29,4 +29,4 @@ namespace :revision do
   end
 end
 
-after 'deploy:update_code', 'revision:set'
+after 'deploy:update', 'revision:set'
