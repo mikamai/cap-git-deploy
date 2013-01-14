@@ -1,4 +1,5 @@
 set :revision_file, 'REVISION'
+set(:current_revision) { capture("head -1 #{current_path}/REVISION", :except => { :no_release => true }).chomp }
 
 namespace :revision do
   desc "Create a REVISION file containing the SHA of the deployed commit"
