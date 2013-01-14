@@ -62,3 +62,11 @@ To setup your environment, when your recipes are ready, type the following comma
 ```
 
 This will setup your git repository on the remote host.
+
+## Other Stuff: Logs
+
+Tail the current environment log with the "logs" task. So the following command will do a "tail -F" on "log/beta.log"
+
+```bash
+    cap beta logs
+````
