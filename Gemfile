@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source 'https://rubygems.org'
 
-# Specify your gem's dependencies in capistrano-git-deploy.gemspec
+# Specify your gem's dependencies in cap-git-deploy.gemspec
 gemspec
