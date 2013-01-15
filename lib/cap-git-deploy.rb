@@ -1,5 +1,5 @@
 require 'capistrano'
-require "cap-git-deploy/version"
+require 'cap-git-deploy/version'
 
 require 'grit'
 require 'etc'
