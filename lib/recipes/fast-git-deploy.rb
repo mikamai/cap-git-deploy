@@ -63,6 +63,8 @@ namespace :deploy do
 
     run "cd #{current_path} && git fetch" unless rolling_back
     run "cd #{current_path} && git reset --hard #{branch_name}"
+
+    finalize_update
   end
 
   task :insert_tag, :except => { :no_release => true } do
