@@ -6,6 +6,7 @@ unless exists? :branch
 end
 set(:latest_release) { fetch :current_path }
 set(:current_release) { fetch :current_path }
+set(:release_path) { fetch :current_path }
 
 namespace :deploy do
   desc "Setup a GitHub-style deployment"
