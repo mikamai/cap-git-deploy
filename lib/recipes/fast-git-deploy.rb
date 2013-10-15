@@ -16,16 +16,14 @@ namespace :deploy do
       File.join shared_path, shared_child
     end
     run "mkdir -p #{dirs.join ' '} && chmod g+w #{dirs.join ' '}"
-    run "git clone #{repository} #{current_path}"
+    run "test -d #{current_path}/.git && cd #{current_path} && git fetch origin"
+    run "test -d #{current_path}/.git || git clone #{repository} #{current_path}"
 
     # This is where the log files will go
-    run "mkdir -p #{current_path}/log" rescue 'no problem if log already exist'
+    run "test -d #{current_path}/log || mkdir -p #{current_path}/log"
 
     branch = fetch :branch, 'master'
-    if branch != 'master'
-      # This is to make sure we are on the correct branch
-      run "cd #{current_path} && git checkout -b #{branch} --track origin/#{branch}"
-    end
+    run "cd #{current_path} && git reset --hard origin/#{branch}"
   end
 
   namespace :rollback do
