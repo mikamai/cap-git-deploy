@@ -16,8 +16,7 @@ namespace :deploy do
       File.join shared_path, shared_child
     end
     run "mkdir -p #{dirs.join ' '} && chmod g+w #{dirs.join ' '}"
-    run "test -d #{current_path}/.git && cd #{current_path} && git fetch origin"
-    run "test -d #{current_path}/.git || git clone #{repository} #{current_path}"
+    run "(test -d #{current_path}/.git && cd #{current_path} && git fetch origin) || git clone #{repository} #{current_path}"
 
     # This is where the log files will go
     run "test -d #{current_path}/log || mkdir -p #{current_path}/log"
