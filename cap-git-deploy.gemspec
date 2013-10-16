@@ -3,22 +3,23 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'cap-git-deploy/version'
 
-Gem::Specification.new do |gem|
-  gem.name          = 'cap-git-deploy'
-  gem.version       = Cap::Git::Deploy::VERSION
-  gem.authors       = ['Nicola Racco', 'Elia Schito']
-  gem.email         = ['nicola@mikamai.com']
-  gem.description   = %q{Mikamai-style deploy strategy}
-  gem.summary       = %q{Mikamai-style deploy strategy}
-  gem.homepage      = "http://www.mikamai.com"
+Gem::Specification.new do |spec|
+  spec.name          = 'cap-git-deploy'
+  spec.version       = Cap::Git::Deploy::VERSION
+  spec.authors       = ['Nicola Racco', 'Elia Schito']
+  spec.email         = ['nicola@mikamai.com']
+  spec.description   = %q{Mikamai-style capistrano git deployment strategy}
+  spec.summary       = %q{Mikamai-style capistrano git deployment strategy}
+  spec.homepage      = 'http://www.mikamai.com'
+  spec.license       = 'MIT'
 
-  gem.files         = `git ls-files`.split($/)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.require_paths = ["lib"]
+  spec.files         = `git ls-files`.split($/)
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths = ['lib']
 
-  gem.add_runtime_dependency 'capistrano'
-  gem.add_runtime_dependency 'grit'
+  spec.add_runtime_dependency 'capistrano'
+  spec.add_runtime_dependency 'grit'
 
-  gem.add_development_dependency 'rake'
+  spec.add_development_dependency 'rake'
 end
