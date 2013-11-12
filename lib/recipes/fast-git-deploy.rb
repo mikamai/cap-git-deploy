@@ -59,7 +59,7 @@ namespace :deploy do
       branch_name = "origin/#{fetch :branch, 'master'}"
     end
 
-    run "cd #{current_path} && git fetch" unless rolling_back
+    run "cd #{current_path} && git fetch --prune" unless rolling_back
     run "cd #{current_path} && git reset --hard #{branch_name}"
 
     finalize_update
