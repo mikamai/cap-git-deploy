@@ -61,6 +61,7 @@ namespace :deploy do
 
     run "cd #{current_path} && git fetch --prune" unless rolling_back
     run "cd #{current_path} && git reset --hard #{branch_name}"
+    run "cd #{current_path} && git submodule update --init"
 
     finalize_update
   end
