@@ -15,7 +15,10 @@ module Cap
 
       # The name of the current logged user
       def self.current_user
-        "#{Etc.getlogin}@#{Socket.gethostname}"
+        login = Etc.getlogin
+        user  = Etc.getpwnam(login)
+        host  = Socket.gethostname
+        "<#{user}> #{login}@#{host}"
       end
     end
   end
