@@ -1,7 +1,6 @@
 require 'capistrano'
 require 'cap-git-deploy/version'
 
-require 'grit'
 require 'etc'
 
 module Cap
@@ -11,10 +10,7 @@ module Cap
 
       # The name of the branch we are deploying
       def self.current_branch
-        repo = Grit::Repo.new '.'
-        branch = repo.head
-        # if branch is nil, we are in a spurius commit, then we should use master
-        branch && branch.name || 'master'
+        repo = `git rev-parse --abbrev-ref HEAD`.chomp
       end
 
       # The name of the current logged user
