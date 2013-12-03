@@ -13,13 +13,14 @@ namespace :revision do
       sha = data.strip
     end
 
-    commands = []
-    commands << "cd #{current_path}"
-    commands << "echo '#{sha}' > #{revision_file}"
-    commands << "echo '#{branch}' >> #{revision_file}"
-    commands << "echo '#{logged_user}' >> #{revision_file}"
-    commands << "echo '#{Time.now}' >> #{revision_file}"
-    run commands.join ' && '
+    revision_contents = [
+      sha,
+      branch,
+      logged_user,
+      Time.now,
+    ].join("\n")
+
+    put revision_contents, "#{current_path}/#{revision_file}"
   end
 
   desc "Get info about last deploy"
