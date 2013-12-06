@@ -16,9 +16,9 @@ module Cap
       # The name of the current logged user
       def self.current_user
         login = Etc.getlogin
-        user  = Etc.getpwnam(login)
+        user  = Etc.getpwnam(login).gecos
         host  = Socket.gethostname
-        "<#{user}> #{login}@#{host}"
+        "#{login}@#{host} (#{user})"
       end
     end
   end
