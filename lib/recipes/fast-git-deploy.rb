@@ -16,7 +16,8 @@ namespace :deploy do
       File.join shared_path, shared_child
     end
     run "mkdir -p #{dirs.join ' '} && chmod g+w #{dirs.join ' '}"
-    run "(test -d #{current_path}/.git && cd #{current_path} && git fetch origin) || git clone #{repository} #{current_path}"
+    run "test -d #{current_path}/.git || git clone #{repository} #{current_path}"
+    run "cd #{current_path} && git remote set-url origin #{repository} && git fetch origin"
 
     # This is where the log files will go
     run "test -d #{current_path}/log || mkdir -p #{current_path}/log"
@@ -59,7 +60,7 @@ namespace :deploy do
       branch_name = "origin/#{fetch :branch, 'master'}"
     end
 
-    run "cd #{current_path} && git fetch --prune" unless rolling_back
+    run "cd #{current_path} && git remote set-url origin #{repository} && git fetch origin"
     run "cd #{current_path} && git reset --hard #{branch_name}"
     run "cd #{current_path} && git submodule update --init"
 
